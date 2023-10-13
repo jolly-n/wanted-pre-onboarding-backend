@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,8 +26,18 @@ public class Recruitment {
     @JoinColumn(name = "company_id")
     private Company company;
 
+    private int bounty;
     private String position;
-    private String bounty;
     private String contents;
     private String skill;
+
+    @Builder
+    public Recruitment(Company company, String position, int bounty, String contents,
+        String skill) {
+        this.company = company;
+        this.position = position;
+        this.bounty = bounty;
+        this.contents = contents;
+        this.skill = skill;
+    }
 }
