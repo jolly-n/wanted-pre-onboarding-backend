@@ -22,6 +22,7 @@ public class RecruitmentService {
     private final RecruitmentRepository recruitmentRepository;
     private final CompanyRepository companyRepository;
 
+    @Transactional
     public Long create(RecruitmentCreateRequest recruitmentCreateRequest) {
         Company company = companyRepository.findById(recruitmentCreateRequest.companyId())
             .orElseThrow();
