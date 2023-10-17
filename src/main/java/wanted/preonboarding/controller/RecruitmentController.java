@@ -2,6 +2,8 @@ package wanted.preonboarding.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,5 +33,11 @@ public class RecruitmentController {
     @PutMapping("/{recruitmentId}")
     public RecruitmentEditResponse edit(@PathVariable Long recruitmentId, @RequestBody RecruitmentEditRequest request) {
         return new RecruitmentEditResponse(recruitmentService.edit(recruitmentId, request));
+    }
+
+    @DeleteMapping("/{recruitmentId}")
+    public ResponseEntity<String> delete(@PathVariable Long recruitmentId) {
+        recruitmentService.delete(recruitmentId);
+        return ResponseEntity.ok("공고 삭제 성공");
     }
 }

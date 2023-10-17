@@ -50,4 +50,12 @@ public class RecruitmentService {
         recruitment.update(newRecruitment);
         return recruitmentId;
     }
+
+    @Transactional
+    public void delete(Long recruitmentId) {
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId)
+            .orElseThrow(() -> new EntityNotFoundException(String.format(NOT_FOUND_RECRUITMENT, recruitmentId)));
+
+        recruitmentRepository.delete(recruitment);
+    }
 }
