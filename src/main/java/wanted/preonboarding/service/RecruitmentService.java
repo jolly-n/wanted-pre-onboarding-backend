@@ -1,6 +1,7 @@
 package wanted.preonboarding.service;
 
 import jakarta.persistence.EntityNotFoundException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -8,6 +9,7 @@ import wanted.preonboarding.domain.Company;
 import wanted.preonboarding.domain.Recruitment;
 import wanted.preonboarding.dto.RecruitmentCreateRequest;
 import wanted.preonboarding.dto.RecruitmentEditRequest;
+import wanted.preonboarding.dto.RecruitmentSearchResponse;
 import wanted.preonboarding.repository.CompanyRepository;
 import wanted.preonboarding.repository.RecruitmentRepository;
 
@@ -57,5 +59,26 @@ public class RecruitmentService {
             .orElseThrow(() -> new EntityNotFoundException(String.format(NOT_FOUND_RECRUITMENT, recruitmentId)));
 
         recruitmentRepository.delete(recruitment);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RecruitmentSearchResponse> search(String searchCondition) {
+        List<Recruitment> recruitments = recruitmentRepository.findRecruitments(searchCondition);
+
+        return recruitments.stream()
+            .map(this::toDto)
+            .toList();
+    }
+
+    private RecruitmentSearchResponse toDto(Recruitment recruitment) {
+        return RecruitmentSearchResponse.builder()
+            .recruitmentId(recruitment.getId())
+            .name(recruitment.getCompany().getName())
+            .country(recruitment.getCompany().getCountry())
+            .region(recruitment.getCompany().getRegion())
+            .bounty(recruitment.getBounty())
+            .position(recruitment.getPosition())
+            .skill(recruitment.getSkill())
+            .build();
     }
 }
