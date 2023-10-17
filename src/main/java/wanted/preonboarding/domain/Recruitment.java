@@ -40,4 +40,11 @@ public class Recruitment {
         this.contents = contents;
         this.skill = skill;
     }
+
+    public void update(Recruitment newRecruitment) {
+        this.position = newRecruitment.getPosition();
+        this.bounty = newRecruitment.getBounty();
+        this.skill = newRecruitment.getSkill();
+        this.contents = newRecruitment.getContents();
+    }
 }
