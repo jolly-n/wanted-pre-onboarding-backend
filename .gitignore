@@ -36,4 +36,7 @@ out/
 ### VS Code ###
 .vscode/
 
+### Querydsl build file ###
+**/src/main/generated/
+
 application-secret.yml
