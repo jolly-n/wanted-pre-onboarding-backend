@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import wanted.preonboarding.dto.RecruitmentCreateRequest;
 import wanted.preonboarding.dto.RecruitmentCreateResponse;
+import wanted.preonboarding.dto.RecruitmentDetailResponse;
 import wanted.preonboarding.dto.RecruitmentEditRequest;
 import wanted.preonboarding.dto.RecruitmentEditResponse;
 import wanted.preonboarding.dto.RecruitmentSearchResponse;
@@ -48,5 +49,10 @@ public class RecruitmentController {
     @GetMapping
     public List<RecruitmentSearchResponse> search(@RequestParam(name = "search", required = false) String searchCond) {
         return recruitmentService.search(searchCond);
+    }
+
+    @GetMapping("/{recruitmentId}")
+    public RecruitmentDetailResponse detail(@PathVariable Long recruitmentId) {
+        return recruitmentService.detail(recruitmentId);
     }
 }

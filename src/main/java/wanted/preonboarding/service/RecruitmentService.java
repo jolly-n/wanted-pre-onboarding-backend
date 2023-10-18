@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wanted.preonboarding.domain.Company;
 import wanted.preonboarding.domain.Recruitment;
 import wanted.preonboarding.dto.RecruitmentCreateRequest;
+import wanted.preonboarding.dto.RecruitmentDetailResponse;
 import wanted.preonboarding.dto.RecruitmentEditRequest;
 import wanted.preonboarding.dto.RecruitmentSearchResponse;
 import wanted.preonboarding.repository.CompanyRepository;
@@ -80,6 +81,30 @@ public class RecruitmentService {
             .bounty(recruitment.getBounty())
             .position(recruitment.getPosition())
             .skill(recruitment.getSkill())
+            .build();
+    }
+
+    @Transactional(readOnly = true)
+    public RecruitmentDetailResponse detail(Long recruitmentId) {
+        Recruitment recruitment = recruitmentRepository.findById(recruitmentId)
+            .orElseThrow(() -> new EntityNotFoundException(String.format(NOT_FOUND_RECRUITMENT, recruitmentId)));
+
+        List<Long> recruitmentIds = recruitmentRepository.findRecruitmentIdsByCompany(recruitment.getCompany());
+
+        return toDto(recruitment, recruitmentIds);
+    }
+
+    private RecruitmentDetailResponse toDto(Recruitment recruitment, List<Long> recruitmentIds) {
+        return RecruitmentDetailResponse.builder()
+            .recruitmentId(recruitment.getId())
+            .name(recruitment.getCompany().getName())
+            .country(recruitment.getCompany().getCountry())
+            .region(recruitment.getCompany().getRegion())
+            .bounty(recruitment.getBounty())
+            .position(recruitment.getPosition())
+            .skill(recruitment.getSkill())
+            .contents(recruitment.getContents())
+            .anotherRecruitmentIds(recruitmentIds)
             .build();
     }
 }

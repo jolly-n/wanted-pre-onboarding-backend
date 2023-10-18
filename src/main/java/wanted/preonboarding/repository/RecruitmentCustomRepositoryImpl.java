@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import wanted.preonboarding.domain.Company;
 import wanted.preonboarding.domain.Recruitment;
 
 @RequiredArgsConstructor
@@ -18,6 +19,14 @@ public class RecruitmentCustomRepositoryImpl implements RecruitmentCustomReposit
     public List<Recruitment> findRecruitments(String searchCondition) {
         return queryFactory.selectFrom(recruitment)
             .where(containsCondition(searchCondition))
+            .fetch();
+    }
+
+    @Override
+    public List<Long> findRecruitmentIdsByCompany(Company company) {
+        return queryFactory.select(recruitment.id)
+            .from(recruitment)
+            .where(eqCompany(company))
             .fetch();
     }
 
@@ -40,5 +49,9 @@ public class RecruitmentCustomRepositoryImpl implements RecruitmentCustomReposit
 
     private BooleanExpression containsCompanyName(String word) {
         return word != null ? recruitment.company.name.containsIgnoreCase(word) : null;
+    }
+
+    private BooleanExpression eqCompany(Company name) {
+        return recruitment.company.eq(name);
     }
 }
