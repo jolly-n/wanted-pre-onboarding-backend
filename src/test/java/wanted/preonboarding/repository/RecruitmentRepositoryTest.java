@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import wanted.preonboarding.config.QuerydslConfig;
+import wanted.preonboarding.domain.Company;
 import wanted.preonboarding.domain.Recruitment;
 
 @DataJpaTest
@@ -42,6 +43,28 @@ class RecruitmentRepositoryTest {
         // then
         List<Recruitment> recruitments = recruitmentRepository.findAll();
         assertThat(recruitments).hasSize(1);
+    }
+
+    @DisplayName("회사의 모든 채용공고 목록 조회")
+    @Test
+    void findRecruitmentIdsByCompany() {
+        // given
+        Company company1 = companyRepository.findById(1L).orElseThrow();
+        Company company2 = companyRepository.findById(2L).orElseThrow();
+
+        Recruitment recruitment1 = Recruitment.builder().company(company1).build();
+        Recruitment recruitment2 = Recruitment.builder().company(company2).build();
+
+        recruitmentRepository.save(recruitment1);
+        recruitmentRepository.save(recruitment2);
+
+        // when
+        List<Long> recruitmentIdsByCompany1 = recruitmentRepository.findRecruitmentIdsByCompany(company1);
+        List<Long> recruitmentIdsByCompany2 = recruitmentRepository.findRecruitmentIdsByCompany(company2);
+
+        // then
+        assertThat(recruitmentIdsByCompany1).containsExactly(recruitment1.getId());
+        assertThat(recruitmentIdsByCompany2).containsExactly(recruitment2.getId());
     }
 
     @DisplayName("포지션으로 채용공고 검색")
